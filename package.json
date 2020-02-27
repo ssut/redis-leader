@@ -4,7 +4,7 @@
   "description": "Leader election using redis",
   "main": "index.js",
   "scripts": {
-    "test": "mocha test"
+    "test": "npx ts-mocha --paths test/**/*.spec.ts"
   },
   "keywords": [
     "redis",
@@ -13,10 +13,21 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "chai": "^1.10.0",
-    "mocha": "^2.1.0"
+    "@types/expect": "^24.3.0",
+    "@types/mocha": "^7.0.1",
+    "@types/node": "^13.7.6",
+    "@types/redis": "^2.8.16",
+    "@types/uuid": "^7.0.0",
+    "chai": "^4.2.0",
+    "mocha": "^7.1.0",
+    "redis-mock": "^0.49.0",
+    "ts-mocha": "^6.0.0",
+    "ts-node": "^8.6.2",
+    "ts-node-dev": "^1.0.0-pre.44",
+    "typescript": "^3.8.2"
   },
   "dependencies": {
-    "uuid": "^2.0.1"
+    "uuid": "^2.0.3",
+    "handy-redis": "^1.8.0"
   }
 }

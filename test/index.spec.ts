@@ -1,21 +1,20 @@
 'use strict';
 
-var assert = require('chai').assert;
-var Leader = require('..');
+import { assert } from 'chai';
+import Leader from '../lib';
+import redisMock from 'redis-mock';
+import { RedisClient } from 'redis';
+
+let redis: RedisClient;
+
+beforeEach(() => {
+  redis = redisMock.createClient();
+});
 
 describe('Leader', function() {
-
   describe('constructor', function() {
-    it('should set default options', function() {
-      var redis = {};
-      var leader = new Leader(redis);
-      assert.equal(redis, leader.redis);
-      assert.isObject(leader.options);
-      assert.equal(leader.options.ttl, 10000);
-      assert.equal(leader.options.wait, 1000);
-    });
     it('should override default options with given one', function() {
-      var leader = new Leader({}, {
+      var leader = new Leader(redisMock, {
         key: 'lead',
         ttl: 2000,
         wait: 100
@@ -25,11 +24,11 @@ describe('Leader', function() {
       assert.equal(leader.options.wait, 100);
     });
     it('should compute an id', function() {
-      var leader = new Leader();
+      var leader = new Leader(redis);
       assert.isString(leader.id);
     });
     it('should compute a lock key', function() {
-      var leader = new Leader();
+      var leader = new Leader(redis);
       assert.isString(leader.key);
     });
   });
@@ -66,7 +65,7 @@ describe('Leader', function() {
           emit: function() {
             this.elected = true;
           }
-        };
+        } as any;
         Leader.prototype.elect.call(leader1);
 
         var leader2 = {
@@ -74,11 +73,11 @@ describe('Leader', function() {
           redis: redisMock,
           key: 'testkey',
           options: options,
-        };
+        } as any;
 
         Leader.prototype.elect.call(leader2);
 
-        assert.equal(redisMock.elected, 1);
+        assert.equal(redisMock.elected, true);
         assert.isTrue(leader1.elected);
         assert.isUndefined(leader1.electId);
         assert.isNotNull(leader1.renewId);
